@@ -1,0 +1,113 @@
+{
+	"name": "minikube",
+	"version": "1.0.0",
+	"client": {
+		"tlsEnable": true,
+		"adminCredential": {
+			"id": "exploreradmin",
+			"password": "exploreradminpw"
+		},
+		"enableAuthentication": true,
+		"organization": "Org2MSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "3000"
+				},
+				"orderer": "3000"
+			}
+		}
+	},
+	"channels": {
+		"charitychannel": {
+			"orderers": ["abacaba-orderer-clusterip", "abacaba-orderer2-clusterip", "abacaba-orderer3-clusterip"],
+			"peers": {
+				"peer1.org2.com": {},
+				"peer1.org3.com": {}
+			}	
+		}
+	},
+	"organizations": {
+		"Org2MSP": {
+			"mspid": "Org2MSP",
+			"adminPrivateKey": {
+				"path": "/tmp/crypto/peerOrganizations/org2.com/users/Admin@org2.com/msp/keystore/priv_sk"
+			},
+			"peers": ["peer1.org2.com"],
+			"signedCert": {
+				"path": "/tmp/crypto/peerOrganizations/org2.com/users/Admin@org2.com/msp/signcerts/Admin@org2.com-cert.pem"
+			}
+		},
+		"Org3MSP": {
+			"mspid": "Org3MSP",
+			"adminPrivateKey": {
+				"path": "/tmp/crypto/peerOrganizations/org3.com/users/Admin@org3.com/msp/keystore/priv_sk"
+			},
+			"peers": ["peer1.org3.com"],
+			"signedCert": {
+				"path": "/tmp/crypto/peerOrganizations/org3.com/users/Admin@org3.com/msp/signcerts/Admin@org3.com-cert.pem"
+			},
+      "OrdererMSP": {
+        "mspid": "OrdererMSP",
+        "adminPrivateKey": {
+          "path":
+            "/fabric/crypto-config/ordererOrganizations/abacaba.com/users/Admin@abacaba.com/msp/keystore/priv_sk"
+        }
+      }
+		}
+	},
+	"peers": {
+		"peer1.org2.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/org2.com/peers/peer1.org2.com/tls/ca.crt"
+			},
+			"url": "grpcs://192.168.49.2:30851",
+			"grpcOptions":{
+				"ssl-target-name-override": "peer1.org2.com",
+				"hostnameOverride": "localhost"
+			}
+		},
+		"peer1.org3.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/org3.com/peers/peer1.org3.com/tls/ca.crt"
+			},
+			"url": "grpcs://192.168.49.2:30951",
+			"grpcOptions":{
+				"ssl-target-name-override": "peer1.org3.com",
+				"hostnameOverride": "localhost"
+			}
+		}
+	},
+  "orderers": {
+    "abacaba-orderer-clusterip": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/ordererOrganizations/abacaba.com/orderers/abacaba-orderer-clusterip.abacaba.com/tls/ca.crt"
+			},
+    	"url": "grpcs://192.168.49.2:30750",
+			"grpcOptions":{
+				"ssl-target-name-override": "abacaba-orderer-clusterip",
+				"hostnameOverride": "localhost"
+			}
+    },
+		"abacaba-orderer2-clusterip": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/ordererOrganizations/abacaba.com/orderers/abacaba-orderer2-clusterip.abacaba.com/tls/ca.crt"
+			},
+    	"url": "grpcs://192.168.49.2:30650",
+			"grpcOptions":{
+				"ssl-target-name-override": "abacaba-orderer2-clusterip",
+				"hostnameOverride": "localhost"
+			}
+    },
+		"abacaba-orderer3-clusterip": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/ordererOrganizations/abacaba.com/orderers/abacaba-orderer3-clusterip.abacaba.com/tls/ca.crt"
+			},
+    	"url": "grpcs://192.168.49.2:30550",
+			"grpcOptions":{
+				"ssl-target-name-override": "abacaba-orderer3-clusterip",
+				"hostnameOverride": "localhost"
+			}
+    }
+  }
+}

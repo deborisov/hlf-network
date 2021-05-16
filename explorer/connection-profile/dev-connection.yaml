@@ -1,0 +1,92 @@
+{
+	"name": "minikube",
+	"version": "1.0.0",
+	"client": {
+		"tlsEnable": true,
+		"adminCredential": {
+			"id": "exploreradmin",
+			"password": "exploreradminpw"
+		},
+		"enableAuthentication": true,
+		"organization": "Org1MSP",
+		"connection": {
+			"timeout": {
+				"peer": {
+					"endorser": "3000"
+				},
+				"orderer": "3000"
+			}
+		}
+	},
+	"channels": {
+		"mainchannel": {
+			"orderers": ["abacaba-orderer-clusterip", "abacaba-orderer2-clusterip", "abacaba-orderer3-clusterip"],
+			"peers": {
+				"peer1.abacaba.com": {}
+			}
+		}
+	},
+	"organizations": {
+		"Org1MSP": {
+			"mspid": "Org1MSP",
+			"adminPrivateKey": {
+				"path": "/tmp/crypto/peerOrganizations/abacaba.com/users/Admin@abacaba.com/msp/keystore/priv_sk"
+			},
+			"peers": ["peer1.abacaba.com"],
+			"signedCert": {
+				"path": "/tmp/crypto/peerOrganizations/abacaba.com/users/Admin@abacaba.com/msp/signcerts/Admin@abacaba.com-cert.pem"
+			}
+		},
+    "OrdererMSP": {
+      "mspid": "OrdererMSP",
+      "adminPrivateKey": {
+        "path":
+          "/fabric/crypto-config/ordererOrganizations/abacaba.com/users/Admin@abacaba.com/msp/keystore/priv_sk"
+      }
+    }
+	},
+	"peers": {
+		"peer1.abacaba.com": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/peerOrganizations/abacaba.com/peers/peer1.abacaba.com/tls/ca.crt"
+			},
+			"url": "grpcs://192.168.49.2:30751",
+			"grpcOptions":{
+				"ssl-target-name-override": "peer1.abacaba.com",
+				"hostnameOverride": "localhost"
+			}
+		}
+	},
+  "orderers": {
+    "abacaba-orderer-clusterip": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/ordererOrganizations/abacaba.com/orderers/abacaba-orderer-clusterip.abacaba.com/tls/ca.crt"
+			},
+    	"url": "grpcs://192.168.49.2:30750",
+			"grpcOptions":{
+				"ssl-target-name-override": "abacaba-orderer-clusterip",
+				"hostnameOverride": "localhost"
+			}
+    },
+		"abacaba-orderer2-clusterip": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/ordererOrganizations/abacaba.com/orderers/abacaba-orderer2-clusterip.abacaba.com/tls/ca.crt"
+			},
+    	"url": "grpcs://192.168.49.2:30650",
+			"grpcOptions":{
+				"ssl-target-name-override": "abacaba-orderer2-clusterip",
+				"hostnameOverride": "localhost"
+			}
+    },
+		"abacaba-orderer3-clusterip": {
+			"tlsCACerts": {
+				"path": "/tmp/crypto/ordererOrganizations/abacaba.com/orderers/abacaba-orderer3-clusterip.abacaba.com/tls/ca.crt"
+			},
+    	"url": "grpcs://192.168.49.2:30550",
+			"grpcOptions":{
+				"ssl-target-name-override": "abacaba-orderer3-clusterip",
+				"hostnameOverride": "localhost"
+			}
+    }
+  }
+}

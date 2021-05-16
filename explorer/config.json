@@ -1,0 +1,13 @@
+{
+	"network-configs": {
+		"voting-network": {
+			"name": "Voting network",
+			"profile": "./connection-profile/dev-connection.yaml"
+		},
+		"charity-network": {
+			"name": "Charity network",
+			"profile": "./connection-profile/dev-connection-charity.yaml"
+		}
+	},
+	"license": "Apache-2.0"
+}

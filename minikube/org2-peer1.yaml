@@ -1,0 +1,126 @@
+# YAML for launching the orderer
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: org2-peer1
+  labels:
+    app: org2-peer1
+spec:
+  serviceName: org2-peer1
+  replicas: 1
+  selector:
+    matchLabels:
+      app: org2-peer1
+  template:
+    metadata:
+      labels:
+        app: org2-peer1
+    spec:
+      containers:
+      - name: org2-peer1
+        # Image used
+        image: paramecium/k8s-hlf-org2-peer1:2.0
+        # Uncomment the following during development/testing of the image
+        imagePullPolicy: Always
+        env:
+          - name: FABRIC_CFG_PATH
+            value: /var/hyperledger/config
+          - name: FABRIC_LOGGING_SPEC
+            value: INFO
+          - name: ORDERER_ADDRESS
+            value: abacaba-orderer-clusterip:30750
+          - name: ORG_CONTEXT
+            value: org2
+          - name: CORE_PEER_ADDRESS
+          # value: acme-peer-clusterip:30751
+            value: localhost:30851
+          - name: CORE_LEDGER_STATE_STATEDATABASE
+            value: CouchDB
+          - name: CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS
+            value: localhost:5984
+          - name: CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME
+            value: couchdb
+          - name: CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD
+            value: password
+          # - name: MSP_ID
+          #   value: Org2MSP
+          # - name: ORG_NAME
+          #   value: Org2MSP
+          # - name: CORE_PEER_MSPCONFIGPATH
+          #   value:  /var/hyperledger/users/Admin@org2.com/msp
+        volumeMounts:
+        - name: org2-peer1-ledger
+          mountPath: /var/ledger
+        - name: dockersock
+          mountPath: /var/run/docker.sock
+      - name: couchdb
+        image: hyperledger/fabric-couchdb:0.4
+        env:
+        - name: COUCHDB_USER
+          value: "couchdb"
+        - name: COUCHDB_PASSWORD
+          value: "password"
+      volumes:
+      - name: dockersock
+        hostPath:
+          path: /var/run/docker.sock
+  volumeClaimTemplates:
+  - metadata: 
+      name: org2-peer1-ledger
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: general
+      resources:
+        requests:
+          storage: 1Gi
+
+---
+# Expose the port 7051 as ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+  name: org2-peer1-clusterip
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: org2-peer1
+
+  ports:
+    - name: org2-peer1-clusterip
+      port: 30851
+    - name: org2-peer1-cc-clusterip
+      port: 30852
+    - name: couchdb
+      port: 5984
+
+  type: ClusterIP
+
+---
+# Expose the port 30751 as node port -  NEEDED if you
+# are interested in connecting to the Pods from the Host
+# machine - keep in mind you would need the IP for the node
+# port service
+apiVersion: v1
+kind: Service
+metadata:
+  name: org2-peer1-nodeport
+
+spec:
+  # This defines which pods are going to be represented by this Service
+  # The service becomes a network endpoint for either other services
+  # or maybe external users to connect to (eg browser)
+  selector:
+    app: org2-peer1
+
+  ports:
+    - name: org2-peer1-nodeport-851
+      port: 30851
+      nodePort: 30851
+    - name: org2-peer1-cc-nodeport-852
+      port: 30852
+      nodePort: 30852
+
+  type: NodePort

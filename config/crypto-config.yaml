@@ -1,0 +1,54 @@
+# Defines four organizations
+#  - Orderer organization
+#  - Acme
+#  - Budget
+#  - Expo
+##### Orderer for acme
+OrdererOrgs:
+  - Name: Orderer
+    Domain: abacaba.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: abacaba-orderer-clusterip
+      - Hostname: abacaba-orderer2-clusterip
+      - Hostname: abacaba-orderer3-clusterip
+      
+#### Peers for acme
+PeerOrgs:
+  # Peer configuration for ACME
+  - Name: Org1
+    Domain: abacaba.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: localhost
+        CommonName: peer1.abacaba.com
+        # SANS:
+        #   - "abacaba-peer-clusterip"
+    Users:
+      Count: 1
+  - Name: Org2
+    Domain: org2.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: localhost
+        CommonName: peer1.org2.com
+      #   SANS:
+      #     - "org2-peer2-clusterip"
+      # - Hostname: localhost
+      #   CommonName: peer2.org2.com
+      #   SANS:
+      #     - "org2-peer2-clusterip"
+    Users:
+      Count: 1
+  - Name: Org3
+    Domain: org3.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: localhost
+        CommonName: peer1.org3.com
+  #     - Hostname: localhost
+  #       CommonName: peer2.org3.com
+    Users:
+      Count: 1
+
+      
